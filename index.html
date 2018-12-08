@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Socket.IO chat</title>
+    <title>Reci svom neci v3.1</title>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { font: 13px Helvetica, Arial; }
@@ -11,12 +11,21 @@
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
-      #messages { margin-bottom: 40px }
+      #messages { margin-bottom: 80px }
+      
+      span {color: white;}
+      
     </style>
   </head>
   <body>
     <ul id="messages"></ul>
     <form action="">
+    
+    	<label>
+    		<span>USERNAME: </span>
+    		<input id="username">
+    	</label>
+    
       <input id="m" autocomplete="off" /><button>Send</button>
     </form>
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
@@ -24,9 +33,25 @@
     <script>
       $(function () {
         var socket = io();
+        window.onload = () => {
+          const username = localStorage.getItem('username-neca');
+          if (username) {
+            $('#username').val(username);
+          }
+        }
         $('form').submit(function(){
-          socket.emit('chat message', $('#m').val());
-          $('#m').val('');
+          if ($('#username').val().trim() == '') {
+            alert('Unesi username');
+          } else {
+            if ($('#m').val().trim() != '') {
+              const currentUser = localStorage.getItem('username-neca');
+              if (!currentUser && currentUser != $('#username').val()) {
+                localStorage.setItem('username-neca', $('#username').val());
+              }
+              socket.emit('chat message',$('#username').val() + ':  ' + $('#m').val());
+              $('#m').val('');
+            }
+          }
           return false;
         });
         socket.on('chat message', function(msg){
