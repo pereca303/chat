@@ -1,14 +1,19 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 5222;
 
 app.get('/', function(req, res){
+  console.log("http request from: " + req.connection.remoteAddress);
   res.sendFile(__dirname + '/index.html');
 });
 
 io.on('connection', function(socket){
+  
+  console.log("socket connection...");
+  
   socket.on('chat message', function(msg){
+    console.log(msg);
     io.emit('chat message', msg);
   });
 });
