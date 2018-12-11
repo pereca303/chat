@@ -21,3 +21,15 @@ io.on('connection', function(socket){
 http.listen(port, function(){
   console.log('listening on *:' + port);
 });
+
+// listen for console input and sends it as admin: input_value
+
+var stdin = process.openStdin();
+var input="";
+stdin.addListener("data", function(input_data){
+	
+	input=input_data.toString().trim(); // removes newLine from the end of the file
+	
+	io.emit("chat message", "admin: " + input);	
+	
+});
